@@ -1,15 +1,16 @@
 import React from "react";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
+import LandingScreen from "../screens/LandingScreen";
+import SignUpScreen from "../screens/SignUpScreen";
+import ProfileCreatedScreen from "../screens/ProfileCreatedScreen";
 import { colors } from "../constants/theme";
 
 const Stack = createNativeStackNavigator();
 
-// This is the single source of truth for app navigation.
-// Story 1 adds SignUp, Story 3 adds Discover, etc. — each story
-// registers its own screen(s) here rather than nesting navigators
-// all over the place.
+// Single source of truth for app navigation.
+// Story 3 will add a bottom-tab navigator (Discover/Post/Messages/Profile)
+// that ProfileCreated will route into instead of being a dead end.
 const navTheme = {
   ...DarkTheme,
   colors: {
@@ -26,7 +27,9 @@ export default function AppNavigator() {
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Landing" component={LandingScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="ProfileCreated" component={ProfileCreatedScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
