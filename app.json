@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Lineup",
+    "slug": "lineup",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#14110F"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lineup.app"
+    },
+    "android": {
+      "package": "com.lineup.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
