@@ -21,6 +21,8 @@ export default function ProfileCreatedScreen() {
       <View style={styles.card}>
         <Row label="Role" value={profile?.role} />
         {profile?.skills?.length > 0 && <Row label="Skills" value={profile.skills.join(", ")} />}
+        {profile?.country ? <Row label="Country" value={profile.country} /> : null}
+        {profile?.phone ? <Row label="Phone" value={profile.phone} /> : null}
         {profile?.location ? <Row label="Location" value={profile.location} /> : null}
         {profile?.rate ? <Row label="Rate" value={profile.rate} /> : null}
       </View>

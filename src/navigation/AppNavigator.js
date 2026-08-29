@@ -3,6 +3,7 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LandingScreen from "../screens/LandingScreen";
 import SignUpScreen from "../screens/SignUpScreen";
+import LoginScreen from "../screens/LoginScreen";
 import ProfileCreatedScreen from "../screens/ProfileCreatedScreen";
 import { colors } from "../constants/theme";
 
@@ -29,6 +30,7 @@ export default function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="ProfileCreated" component={ProfileCreatedScreen} />
       </Stack.Navigator>
     </NavigationContainer>

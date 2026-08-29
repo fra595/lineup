@@ -1,114 +1,145 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { colors, spacing, radius } from "../constants/theme";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ImageBackground,
+} from "react-native";
+import { colors } from "../constants/theme";
 
-// First screen the user sees. Picking a role sends them to SignUp
-// with that role pre-filled. "Hirer" is wired up but SignUp's hirer
-// path is a placeholder until Story 2.
+// Uses our own generated illustration (sax + drum kit, gold silhouette)
+// as a full-screen background — no licensing risk, already in the project.
 export default function LandingScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.eyebrow}>FIND YOUR NEXT ACT</Text>
-        <Text style={styles.title}>
-          Line<Text style={{ color: colors.gold }}>up</Text>
-        </Text>
-        <Text style={styles.subtitle}>
-          Drummers, guitarists, keys, vocalists, MCs, music directors, sound engineers — booked
-          for weddings, ceremonies, graduations and every stage in between.
-        </Text>
-      </View>
+    <ImageBackground
+      source={require("../assets/images/landing-bg-real.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Dark overlay so text stays readable over the illustration */}
+      <View style={styles.overlay} />
 
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={styles.primaryBtn}
-          onPress={() => navigation.navigate("SignUp", { role: "Musician" })}
-        >
-          <Text style={styles.primaryBtnText}>I'm a musician — get booked</Text>
-        </TouchableOpacity>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.logo}>Lineup</Text>
+          <Text style={styles.tagline}>
+            Book musicians, sound engineers & MCs for your event
+          </Text>
+        </View>
 
-        <TouchableOpacity
-          style={styles.altBtn}
-          onPress={() => navigation.navigate("SignUp", { role: "Music Director" })}
-        >
-          <Text style={styles.altBtnText}>I'm a director / engineer / MC</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate("SignUp", { role: "Hirer" })}
+          >
+            <Text style={styles.primaryButtonText}>I want to hire talent</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.secondaryBtn}
-          onPress={() => navigation.navigate("SignUp", { role: "Hirer" })}
-        >
-          <Text style={styles.secondaryBtnText}>I'm hiring for an event</Text>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate("SignUp", { role: "Musician" })}
+          >
+            <Text style={styles.secondaryButtonText}>I'm a performer</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.tertiaryButton}
+            onPress={() => navigation.navigate("SignUp", { role: "Sound Engineer / MC" })}
+          >
+            <Text style={styles.tertiaryButtonText}>I am a Sound Engineer / MC</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.loginLink}>Already have an account? Sign in</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.background,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(20,17,15,0.82)",
+  },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     justifyContent: "space-between",
-    padding: spacing.lg,
-    paddingTop: 60,
-    paddingBottom: 40,
+    paddingVertical: 60,
+    paddingHorizontal: 24,
   },
-  eyebrow: {
-    fontSize: 13,
-    letterSpacing: 3,
-    color: colors.gold,
-    marginBottom: 6,
-    fontWeight: "600",
+  header: {
+    alignItems: "center",
+    marginTop: 40,
   },
-  title: {
-    fontSize: 44,
-    fontWeight: "700",
+  logo: {
+    fontSize: 36,
+    fontWeight: "bold",
     color: colors.textPrimary,
+    marginBottom: 12,
   },
-  subtitle: {
+  tagline: {
+    fontSize: 16,
     color: colors.textSecondary,
-    fontSize: 14.5,
-    marginTop: 14,
-    lineHeight: 21,
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
-  buttons: {
-    gap: 10,
+  buttonGroup: {
+    width: "100%",
   },
-  primaryBtn: {
+  primaryButton: {
     backgroundColor: colors.gold,
-    borderRadius: radius.md,
-    padding: 14,
+    paddingVertical: 16,
+    borderRadius: 30,
     alignItems: "center",
+    marginBottom: 14,
   },
-  primaryBtnText: {
+  primaryButtonText: {
     color: colors.background,
-    fontWeight: "700",
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: "600",
   },
-  altBtn: {
-    backgroundColor: colors.surfaceAlt,
-    borderRadius: radius.md,
-    padding: 14,
+  secondaryButton: {
+    borderWidth: 1.5,
+    borderColor: colors.textPrimary,
+    paddingVertical: 16,
+    borderRadius: 30,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
-  altBtnText: {
+  secondaryButtonText: {
     color: colors.textPrimary,
+    fontSize: 16,
     fontWeight: "600",
-    fontSize: 14,
   },
-  secondaryBtn: {
-    borderRadius: radius.md,
-    padding: 14,
+  tertiaryButton: {
+    borderWidth: 1.5,
+    borderColor: colors.gold,
+    paddingVertical: 16,
+    borderRadius: 30,
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.red,
+    marginTop: 14,
+    backgroundColor: "rgba(217,164,65,0.08)",
   },
-  secondaryBtnText: {
-    color: colors.red,
+  tertiaryButtonText: {
+    color: colors.gold,
+    fontSize: 16,
     fontWeight: "600",
+  },
+  loginLink: {
+    color: colors.textSecondary,
+    textAlign: "center",
     fontSize: 14,
+    marginTop: 16,
+    textDecorationLine: "underline",
   },
 });
