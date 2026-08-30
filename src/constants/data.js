@@ -22,12 +22,12 @@ export const EVENT_TYPES = [
 ];
 
 export const COUNTRIES = [
-  { label: "Kenya", code: "+254", flag: "🇰🇪" },
-  { label: "Uganda", code: "+256", flag: "🇺🇬" },
-  { label: "Tanzania", code: "+255", flag: "🇹🇿" },
-  { label: "Nigeria", code: "+234", flag: "🇳🇬" },
-  { label: "Ghana", code: "+233", flag: "🇬🇭" },
-  { label: "South Africa", code: "+27", flag: "🇿🇦" },
-  { label: "United States", code: "+1", flag: "🇺🇸" },
-  { label: "United Kingdom", code: "+44", flag: "🇬🇧" },
+  { label: "Kenya", code: "+254", flag: "🇰🇪", currency: "KES" },
+  { label: "Uganda", code: "+256", flag: "🇺🇬", currency: "UGX" },
+  { label: "Tanzania", code: "+255", flag: "🇹🇿", currency: "TZS" },
+  { label: "Nigeria", code: "+234", flag: "🇳🇬", currency: "NGN" },
+  { label: "Ghana", code: "+233", flag: "🇬🇭", currency: "GHS" },
+  { label: "South Africa", code: "+27", flag: "🇿🇦", currency: "ZAR" },
+  { label: "United States", code: "+1", flag: "🇺🇸", currency: "USD" },
+  { label: "United Kingdom", code: "+44", flag: "🇬🇧", currency: "GBP" },
 ];

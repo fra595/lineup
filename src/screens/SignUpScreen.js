@@ -56,7 +56,7 @@ export default function SignUpScreen({ route, navigation }) {
       role,
       skills,
       location,
-      rate,
+            rate: rate ? `${selectedCountry.currency} ${rate}` : "",
       bio,
       phone: `${selectedCountry.code} ${phoneNumber}`,
       country: selectedCountry.label,
@@ -143,15 +143,21 @@ export default function SignUpScreen({ route, navigation }) {
         </View>
       </Field>
 
-      {!isHirer && (
-        <Field label="Rate per event">
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. KES 15,000/event"
-            placeholderTextColor={colors.textMuted}
-            value={rate}
-            onChangeText={setRate}
-          />
+           {!isHirer && (
+        <Field label={`Rate per event (${selectedCountry.currency})`}>
+          <View style={styles.phoneRow}>
+            <View style={styles.currencyBadge}>
+              <Text style={styles.currencyBadgeText}>{selectedCountry.currency}</Text>
+            </View>
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="15,000/event"
+              placeholderTextColor={colors.textMuted}
+              value={rate}
+              onChangeText={setRate}
+              keyboardType="numeric"
+            />
+          </View>
         </Field>
       )}
 
@@ -268,6 +274,21 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontWeight: "600",
     fontSize: 14,
+  },
+    currencyBadge: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    minWidth: 70,
+    alignItems: "center",
+  },
+  currencyBadgeText: {
+    color: colors.gold,
+    fontWeight: "700",
+    fontSize: 13,
   },
   phoneInput: {
     flex: 1,
