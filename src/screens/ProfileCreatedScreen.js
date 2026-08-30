@@ -5,7 +5,7 @@ import { useUser } from "../context/UserContext";
 
 // Simple confirmation for Story 1. Story 3 replaces the button below
 // with real navigation into the Discover tab.
-export default function ProfileCreatedScreen() {
+export default function ProfileCreatedScreen({ navigation }) {
   const { profile } = useUser();
 
   return (
@@ -21,11 +21,13 @@ export default function ProfileCreatedScreen() {
       <View style={styles.card}>
         <Row label="Role" value={profile?.role} />
         {profile?.skills?.length > 0 && <Row label="Skills" value={profile.skills.join(", ")} />}
-        {profile?.country ? <Row label="Country" value={profile.country} /> : null}
-        {profile?.phone ? <Row label="Phone" value={profile.phone} /> : null}
         {profile?.location ? <Row label="Location" value={profile.location} /> : null}
         {profile?.rate ? <Row label="Rate" value={profile.rate} /> : null}
       </View>
+
+      <TouchableOpacity style={styles.photoBtn} onPress={() => navigation.navigate("Profile")}>
+        <Text style={styles.photoBtnText}>View my profile & add a photo</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -82,4 +84,17 @@ const styles = StyleSheet.create({
   },
   rowLabel: { color: colors.textMuted, fontSize: 12.5 },
   rowValue: { color: colors.textPrimary, fontSize: 12.5, fontWeight: "600" },
+  photoBtn: {
+    marginTop: 18,
+    backgroundColor: colors.gold,
+    borderRadius: radius.md,
+    padding: 14,
+    alignItems: "center",
+    width: "100%",
+  },
+  photoBtnText: {
+    color: colors.background,
+    fontWeight: "700",
+    fontSize: 14,
+  },
 });
