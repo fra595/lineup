@@ -7,15 +7,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { colors, spacing, radius } from "../constants/theme";
 import { INSTRUMENTS, COUNTRIES } from "../constants/data";
 import Chip from "../components/Chip";
 import { useUser } from "../context/UserContext";
+import { supabase } from "../lib/supabase";
 
 // Handles sign-up for every role. Musicians pick instruments from chips;
 // Music Director / Sound Engineer / MC roles skip that step since the
 // role itself is the skill. Hirers get a lighter form (no rate/skills).
+// On submit, writes the profile into Supabase's `profiles` table.
+// No phone verification yet — phone is saved as plain text for now,
+// OTP verification comes back in a later story.
 export default function SignUpScreen({ route, navigation }) {
   const { role } = route.params;
   const isHirer = role === "Hirer";
@@ -30,18 +36,22 @@ export default function SignUpScreen({ route, navigation }) {
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showCountryPicker, setShowCountryPicker] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const canSubmit =
     name.trim().length > 1 &&
     (isHirer || skills.length > 0) &&
-    phoneNumber.trim().length >= 7;
+    phoneNumber.trim().length >= 7 &&
+    !isSubmitting;
 
   function toggleSkill(skill) {
     setSkills((s) => (s.includes(skill) ? s.filter((x) => x !== skill) : [...s, skill]));
   }
 
-  function handleSubmit() {
-    setProfile({
+  async function handleSubmit() {
+    setIsSubmitting(true);
+
+    const newProfile = {
       name,
       role,
       skills,
@@ -50,9 +60,28 @@ export default function SignUpScreen({ route, navigation }) {
       bio,
       phone: `${selectedCountry.code} ${phoneNumber}`,
       country: selectedCountry.label,
-      countryCode: selectedCountry.code,
+      country_code: selectedCountry.code,
       available: true,
-    });
+    };
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .insert(newProfile)
+      .select()
+      .single();
+
+    setIsSubmitting(false);
+
+    if (error) {
+      Alert.alert(
+        "Couldn't save your profile",
+        "Something went wrong saving to the database. Please check your connection and try again.\n\n" + error.message
+      );
+      return;
+    }
+
+    // Keep it in local context too, so ProfileCreated can show it immediately
+    setProfile(data);
     navigation.navigate("ProfileCreated");
   }
 
@@ -142,7 +171,11 @@ export default function SignUpScreen({ route, navigation }) {
         onPress={handleSubmit}
         style={[styles.submitBtn, { opacity: canSubmit ? 1 : 0.45 }]}
       >
-        <Text style={styles.submitBtnText}>Create account</Text>
+        {isSubmitting ? (
+          <ActivityIndicator color={colors.background} />
+        ) : (
+          <Text style={styles.submitBtnText}>Create account</Text>
+        )}
       </TouchableOpacity>
 
       <Modal visible={showCountryPicker} transparent animationType="slide">
