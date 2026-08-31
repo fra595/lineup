@@ -5,6 +5,7 @@ import LandingScreen from "../screens/LandingScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ProfileCreatedScreen from "../screens/ProfileCreatedScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import PostGigScreen from "../screens/PostGigScreen";
 import { colors } from "../constants/theme";
 
 const Stack = createNativeStackNavigator();
@@ -29,6 +30,7 @@ export default function AppNavigator() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ProfileCreated" component={ProfileCreatedScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="PostGig" component={PostGigScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

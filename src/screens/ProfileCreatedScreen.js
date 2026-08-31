@@ -28,6 +28,15 @@ export default function ProfileCreatedScreen({ navigation }) {
       <TouchableOpacity style={styles.photoBtn} onPress={() => navigation.navigate("Profile")}>
         <Text style={styles.photoBtnText}>View my profile & add a photo</Text>
       </TouchableOpacity>
+
+      {profile?.role === "Hirer" && (
+        <TouchableOpacity
+          style={[styles.photoBtn, { backgroundColor: "transparent", borderWidth: 1, borderColor: colors.gold, marginTop: 10 }]}
+          onPress={() => navigation.navigate("PostGig")}
+        >
+          <Text style={[styles.photoBtnText, { color: colors.gold }]}>Post a gig</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

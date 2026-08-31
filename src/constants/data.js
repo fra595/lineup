@@ -19,6 +19,7 @@ export const EVENT_TYPES = [
   "Corporate Event",
   "Concert",
   "Anniversary",
+  "Live Recording",
 ];
 
 export const COUNTRIES = [
