@@ -9,17 +9,13 @@ import {
   StyleSheet,
   Modal,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import { colors, spacing, radius } from "../constants/theme";
 import { INSTRUMENTS } from "../constants/data";
 import Chip from "../components/Chip";
-import { useUser } from "../context/UserContext";
 import { supabase } from "../lib/supabase";
 
-// Hirers browse real musicians here, pulled from the profiles table.
-// Every card shows a photo (or initials if none uploaded), availability
-// status, skills, location, and rate. Phone numbers are never shown —
-// contact happens through in-app messaging only.
 const FILTER_OPTIONS = ["All", ...INSTRUMENTS, "Music Director", "Sound Engineer", "MC / Host"];
 
 export default function DiscoverScreen({ navigation }) {
@@ -171,6 +167,22 @@ export default function DiscoverScreen({ navigation }) {
                   </Text>
                 </View>
 
+                {(selectedPerson.portfolio || []).length > 0 && (
+                  <View style={styles.portfolioBox}>
+                    <Text style={styles.portfolioTitle}>Show us your sound</Text>
+                    {selectedPerson.portfolio.map((entry, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.portfolioRow}
+                        onPress={() => Linking.openURL(entry.url)}
+                      >
+                        <Text style={styles.portfolioSkill}>{entry.skill}</Text>
+                        <Text style={styles.portfolioLink} numberOfLines={1}>Watch video →</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+
                 <TouchableOpacity style={styles.messageBtn} onPress={() => messagePerson(selectedPerson)}>
                   <Text style={styles.messageBtnText}>Message {selectedPerson.name}</Text>
                 </TouchableOpacity>
@@ -192,35 +204,12 @@ const styles = StyleSheet.create({
   backBtn: { marginBottom: 14 },
   eyebrow: { fontSize: 12, letterSpacing: 2.5, color: colors.gold, fontWeight: "600" },
   title: { fontSize: 22, color: colors.textPrimary, fontWeight: "700", marginTop: 4, marginBottom: 14 },
-  searchBar: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    padding: 12,
-  },
+  searchBar: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 12 },
   searchInput: { color: colors.textPrimary, fontSize: 13 },
   emptyText: { color: colors.textMuted, fontSize: 13, textAlign: "center", marginTop: 30 },
-  card: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: colors.border,
-    borderRadius: radius.lg,
-    padding: 14,
-    marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
+  card: { backgroundColor: colors.surface, borderWidth: 1, borderStyle: "dashed", borderColor: colors.border, borderRadius: radius.lg, padding: 14, marginBottom: 10, flexDirection: "row", alignItems: "center", gap: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22 },
-  avatarPlaceholder: {
-    backgroundColor: colors.surfaceAlt,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
+  avatarPlaceholder: { backgroundColor: colors.surfaceAlt, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: colors.border },
   avatarInitials: { color: colors.gold, fontWeight: "700", fontSize: 14 },
   nameRow: { flexDirection: "row", alignItems: "center", gap: 6 },
   cardName: { color: colors.textPrimary, fontSize: 14.5, fontWeight: "700" },
@@ -229,15 +218,7 @@ const styles = StyleSheet.create({
   cardLocation: { color: colors.textMuted, fontSize: 11, marginTop: 2 },
   cardRate: { color: colors.gold, fontSize: 11.5, fontWeight: "600" },
   modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
-  modalContent: {
-    backgroundColor: colors.background,
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 20,
-    alignItems: "center",
-  },
+  modalContent: { backgroundColor: colors.background, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: 20, alignItems: "center" },
   modalAvatar: { width: 90, height: 90, borderRadius: 45, marginBottom: 10 },
   modalName: { color: colors.textPrimary, fontSize: 19, fontWeight: "700" },
   modalSkills: { color: colors.gold, fontSize: 13, marginTop: 2, marginBottom: 10 },
@@ -245,14 +226,12 @@ const styles = StyleSheet.create({
   detailRow: { flexDirection: "row", justifyContent: "space-between", width: "100%", paddingVertical: 6 },
   detailLabel: { color: colors.textMuted, fontSize: 12.5 },
   detailValue: { color: colors.textPrimary, fontSize: 12.5, fontWeight: "600" },
-  messageBtn: {
-    marginTop: 16,
-    backgroundColor: colors.gold,
-    borderRadius: radius.md,
-    padding: 14,
-    alignItems: "center",
-    width: "100%",
-  },
+  portfolioBox: { width: "100%", marginTop: 12, backgroundColor: colors.surface, borderRadius: radius.md, padding: 12 },
+  portfolioTitle: { color: colors.textPrimary, fontSize: 12.5, fontWeight: "700", marginBottom: 8 },
+  portfolioRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 6 },
+  portfolioSkill: { color: colors.gold, fontSize: 12, fontWeight: "600" },
+  portfolioLink: { color: colors.textSecondary, fontSize: 11.5 },
+  messageBtn: { marginTop: 16, backgroundColor: colors.gold, borderRadius: radius.md, padding: 14, alignItems: "center", width: "100%" },
   messageBtnText: { color: colors.background, fontWeight: "700", fontSize: 14 },
   closeBtn: { marginTop: 10, padding: 12, alignItems: "center" },
   closeBtnText: { color: colors.textSecondary, fontWeight: "600", fontSize: 13 },
