@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Switch,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { decode } from "base64-arraybuffer";
@@ -14,12 +15,13 @@ import { colors, spacing, radius } from "../constants/theme";
 import { useUser } from "../context/UserContext";
 import { supabase } from "../lib/supabase";
 
-// Shows the signed-up user's own profile, with the ability to add/change
-// a profile photo. Photo is uploaded to Supabase Storage (bucket: "avatars"),
-// and the public URL is saved on the profiles row.
+// Shows the signed-up user's own profile: photo upload, details, and
+// (for musicians) a real Available/Booked toggle that updates Supabase
+// immediately, which is what Discover reads to show the status dot.
 export default function ProfileScreen() {
   const { profile, setProfile } = useUser();
   const [uploading, setUploading] = useState(false);
+  const [togglingAvailability, setTogglingAvailability] = useState(false);
 
   if (!profile) {
     return (
@@ -27,6 +29,29 @@ export default function ProfileScreen() {
         <Text style={styles.emptyText}>No profile yet — sign up first.</Text>
       </View>
     );
+  }
+
+  const isHirer = profile.role === "Hirer";
+
+  async function toggleAvailability() {
+    setTogglingAvailability(true);
+    const newValue = !profile.available;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ available: newValue })
+      .eq("id", profile.id)
+      .select()
+      .single();
+
+    setTogglingAvailability(false);
+
+    if (error) {
+      Alert.alert("Couldn't update status", error.message);
+      return;
+    }
+
+    setProfile(data);
   }
 
   async function pickAndUploadPhoto() {
@@ -50,9 +75,6 @@ export default function ProfileScreen() {
     setUploading(true);
 
     try {
-      // Use mimeType to determine the extension — asset.uri on web is a
-      // "data:image/jpeg;base64,...." blob, not a real file path, so we
-      // can't parse an extension out of it the way we can on native.
       const mimeType = asset.mimeType || "image/jpeg";
       const fileExt = mimeType.split("/")[1]?.split("+")[0] || "jpg";
       const filePath = `${profile.id}-${Date.now()}.${fileExt}`;
@@ -118,16 +140,27 @@ export default function ProfileScreen() {
         {profile.skills?.length > 0 && <Row label="Skills" value={profile.skills.join(", ")} />}
         {profile.location ? <Row label="Location" value={profile.location} /> : null}
         {profile.rate ? <Row label="Rate" value={profile.rate} /> : null}
-        {profile.phone ? <Row label="Phone" value={profile.phone} /> : null}
+        {profile.phone ? <Row label="Phone (private, not shown to others)" value={profile.phone} /> : null}
         {profile.bio ? <Row label="Bio" value={profile.bio} /> : null}
       </View>
 
-      <View style={styles.availabilityRow}>
-        <Text style={styles.availabilityLabel}>
-          {profile.available ? "Available for bookings" : "Currently booked"}
-        </Text>
-        <View style={[styles.dot, { backgroundColor: profile.available ? colors.gold : colors.textMuted }]} />
-      </View>
+      {!isHirer && (
+        <View style={styles.availabilityRow}>
+          <Text style={styles.availabilityLabel}>
+            {profile.available ? "Available for bookings" : "Currently booked"}
+          </Text>
+          {togglingAvailability ? (
+            <ActivityIndicator size="small" color={colors.gold} />
+          ) : (
+            <Switch
+              value={!!profile.available}
+              onValueChange={toggleAvailability}
+              trackColor={{ false: colors.surfaceAlt, true: colors.gold }}
+              thumbColor={colors.textPrimary}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }
@@ -243,10 +276,5 @@ const styles = StyleSheet.create({
   availabilityLabel: {
     color: colors.textPrimary,
     fontSize: 13,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
   },
 });

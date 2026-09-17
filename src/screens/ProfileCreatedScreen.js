@@ -3,19 +3,21 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { colors, spacing, radius } from "../constants/theme";
 import { useUser } from "../context/UserContext";
 
-// Simple confirmation for Story 1. Story 3 replaces the button below
-// with real navigation into the Discover tab.
+// Simple confirmation screen after sign-up. Routes hirers to Discover
+// and Post a Gig, musicians to Browse Gigs, plus a shared profile link
+// and messages link for everyone.
 export default function ProfileCreatedScreen({ navigation }) {
   const { profile } = useUser();
+  const isHirer = profile?.role === "Hirer";
 
   return (
     <View style={styles.container}>
       <Text style={styles.check}>✓</Text>
       <Text style={styles.title}>You're all set, {profile?.name || "there"}</Text>
       <Text style={styles.subtitle}>
-        {profile?.role === "Hirer"
-          ? "Your organizer account is ready. Discover and gig-posting come in the next story."
-          : "Your profile is saved. Discovery and messaging come in the next story."}
+        {isHirer
+          ? "Your organizer account is ready. Discover talent, post a gig, or check your messages."
+          : "Your profile is saved. Browse open gigs or check your messages anytime."}
       </Text>
 
       <View style={styles.card}>
@@ -29,14 +31,36 @@ export default function ProfileCreatedScreen({ navigation }) {
         <Text style={styles.photoBtnText}>View my profile & add a photo</Text>
       </TouchableOpacity>
 
-      {profile?.role === "Hirer" && (
+      {isHirer ? (
+        <>
+          <TouchableOpacity
+            style={[styles.photoBtn, styles.outlineBtn]}
+            onPress={() => navigation.navigate("Discover")}
+          >
+            <Text style={[styles.photoBtnText, { color: colors.gold }]}>Discover talent</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.photoBtn, styles.outlineBtn]}
+            onPress={() => navigation.navigate("PostGig")}
+          >
+            <Text style={[styles.photoBtnText, { color: colors.gold }]}>Post a gig</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
         <TouchableOpacity
-          style={[styles.photoBtn, { backgroundColor: "transparent", borderWidth: 1, borderColor: colors.gold, marginTop: 10 }]}
-          onPress={() => navigation.navigate("PostGig")}
+          style={[styles.photoBtn, styles.outlineBtn]}
+          onPress={() => navigation.navigate("BrowseGigs")}
         >
-          <Text style={[styles.photoBtnText, { color: colors.gold }]}>Post a gig</Text>
+          <Text style={[styles.photoBtnText, { color: colors.gold }]}>Browse open gigs</Text>
         </TouchableOpacity>
       )}
+
+      <TouchableOpacity
+        style={[styles.photoBtn, styles.outlineBtn]}
+        onPress={() => navigation.navigate("Messages")}
+      >
+        <Text style={[styles.photoBtnText, { color: colors.gold }]}>Messages</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -94,12 +118,17 @@ const styles = StyleSheet.create({
   rowLabel: { color: colors.textMuted, fontSize: 12.5 },
   rowValue: { color: colors.textPrimary, fontSize: 12.5, fontWeight: "600" },
   photoBtn: {
-    marginTop: 18,
+    marginTop: 10,
     backgroundColor: colors.gold,
     borderRadius: radius.md,
     padding: 14,
     alignItems: "center",
     width: "100%",
+  },
+  outlineBtn: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: colors.gold,
   },
   photoBtnText: {
     color: colors.background,

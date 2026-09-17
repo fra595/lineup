@@ -6,6 +6,10 @@ import SignUpScreen from "../screens/SignUpScreen";
 import ProfileCreatedScreen from "../screens/ProfileCreatedScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import PostGigScreen from "../screens/PostGigScreen";
+import BrowseGigsScreen from "../screens/BrowseGigsScreen";
+import DiscoverScreen from "../screens/DiscoverScreen";
+import MessagesScreen from "../screens/MessagesScreen";
+import ChatScreen from "../screens/ChatScreen";
 import { colors } from "../constants/theme";
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +35,10 @@ export default function AppNavigator() {
         <Stack.Screen name="ProfileCreated" component={ProfileCreatedScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="PostGig" component={PostGigScreen} />
+        <Stack.Screen name="BrowseGigs" component={BrowseGigsScreen} />
+        <Stack.Screen name="Discover" component={DiscoverScreen} />
+        <Stack.Screen name="Messages" component={MessagesScreen} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
