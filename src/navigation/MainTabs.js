@@ -6,14 +6,12 @@ import PostGigScreen from "../screens/PostGigScreen";
 import BrowseGigsScreen from "../screens/BrowseGigsScreen";
 import MessagesScreen from "../screens/MessagesScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import AccountMenu from "../components/AccountMenu";
 import { useUser } from "../context/UserContext";
 import { colors } from "../constants/theme";
 
 const Tab = createBottomTabNavigator();
 
-// The real always-visible navigation once someone's signed in.
-// Hirers see Discover/Post Gig/Messages/Profile; musicians and other
-// roles see Gigs/Messages/Profile instead.
 function TabIcon({ label, focused }) {
   return (
     <Text style={{ fontSize: 10, color: focused ? colors.gold : colors.textMuted, fontWeight: focused ? "700" : "400" }}>
@@ -26,8 +24,13 @@ export default function MainTabs() {
   const { profile } = useUser();
   const isHirer = profile?.role === "Hirer";
 
-  const tabScreenOptions = {
-    headerShown: false,
+  const tabScreenOptions = ({ navigation }) => ({
+    headerShown: true,
+    headerStyle: { backgroundColor: colors.background },
+    headerShadowVisible: false,
+    headerTitleStyle: { color: colors.textPrimary, fontSize: 16 },
+    headerTitle: "Lineup",
+    headerRight: () => <AccountMenu navigation={navigation} />,
     tabBarStyle: {
       backgroundColor: colors.background,
       borderTopColor: colors.border,
@@ -36,7 +39,7 @@ export default function MainTabs() {
       paddingBottom: 8,
     },
     tabBarShowLabel: false,
-  };
+  });
 
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>

@@ -6,6 +6,8 @@ import SignUpScreen from "../screens/SignUpScreen";
 import ProfileCreatedScreen from "../screens/ProfileCreatedScreen";
 import MainTabs from "./MainTabs";
 import ChatScreen from "../screens/ChatScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import NotificationsScreen from "../screens/NotificationsScreen";
 import { colors } from "../constants/theme";
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +33,8 @@ export default function AppNavigator() {
         <Stack.Screen name="ProfileCreated" component={ProfileCreatedScreen} />
         <Stack.Screen name="MainTabs" component={MainTabs} />
         <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
